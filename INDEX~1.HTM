@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel NFS-e - Carina de Souza Zanella</title>
+<style>
+  :root{
+    --azul:#1f4e78; --azul2:#2e6da4; --verde:#2e7d32; --amarelo:#b7950b; --vermelho:#b7472a;
+    --fundo:#f4f6f8; --card:#ffffff; --texto:#1a1a1a; --muted:#6b7280;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:Arial, Helvetica, sans-serif; background:var(--fundo); margin:0; padding:0; color:var(--texto);}
+  .wrap{max-width:960px; margin:0 auto; padding:24px 16px 60px;}
+
+  /* Tela de senha */
+  #login{min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:24px;}
+  #login h1{color:var(--azul); font-size:22px; margin-bottom:4px;}
+  #login p{color:var(--muted); margin-top:0; margin-bottom:24px;}
+  #login input{padding:12px 14px; font-size:16px; border:1px solid #d1d5db; border-radius:8px; width:260px; text-align:center;}
+  #login button{margin-top:14px; padding:12px 24px; font-size:15px; background:var(--azul); color:#fff; border:none; border-radius:8px; cursor:pointer;}
+  #login button:hover{background:var(--azul2);}
+  #erro{color:var(--vermelho); margin-top:10px; font-size:14px; min-height:18px;}
+
+  /* Painel */
+  #painel{display:none;}
+  header.top{background:var(--azul); color:#fff; padding:22px 16px;}
+  header.top .wrap{padding:0 16px;}
+  header.top h1{margin:0; font-size:20px;}
+  header.top p{margin:4px 0 0; opacity:.85; font-size:13px;}
+
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:22px 0;}
+  .card{background:var(--card); border-radius:10px; padding:18px; box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  .card .label{font-size:12.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.03em;}
+  .card .valor{font-size:26px; font-weight:bold; color:var(--azul); margin-top:6px;}
+  .card.ok .valor{color:var(--verde);}
+  .card.alerta .valor{color:var(--amarelo);}
+
+  .secao{background:var(--card); border-radius:10px; padding:20px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  .secao h2{margin:0 0 12px; font-size:16px; color:var(--azul);}
+  .barra{height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden; margin:10px 0;}
+  .barra > div{height:100%; background:var(--verde);}
+  .linha{display:flex; justify-content:space-between; font-size:14px; padding:6px 0; border-bottom:1px solid #eee;}
+  .linha:last-child{border-bottom:none;}
+  .tag{display:inline-block; padding:2px 10px; border-radius:20px; font-size:12px; font-weight:bold;}
+  .tag.verde{background:#e2efda; color:var(--verde);}
+  .tag.amarelo{background:#fff2cc; color:var(--amarelo);}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin-top:10px;}
+  th{text-align:left; background:#f1f5f9; padding:8px; color:var(--muted); font-weight:bold;}
+  td{padding:8px; border-bottom:1px solid #f1f1f1;}
+  .obs{font-size:12.5px; color:var(--muted); margin-top:10px; line-height:1.5;}
+  footer{text-align:center; color:var(--muted); font-size:12px; margin-top:30px;}
+</style>
+</head>
+<body>
+
+  <div id="login">
+    <h1>Painel de Notas Fiscais</h1>
+    <p>Carina de Souza Zanella &middot; Programa de Afiliados Shopee</p>
+    <input type="password" id="senha" placeholder="Digite a senha" autofocus>
+    <br>
+    <button onclick="entrar()">Acessar</button>
+    <div id="erro"></div>
+  </div>
+
+  <div id="painel">
+    <header class="top">
+      <div class="wrap">
+        <h1>Painel de Notas Fiscais - Julho/2026</h1>
+        <p>64.230.192 Carina de Souza Zanella &middot; CNPJ 64.230.192/0001-05 &middot; Programa de Afiliados Shopee</p>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="cards">
+        <div class="card">
+          <div class="label">Comissão total (Shopee)</div>
+          <div class="valor">R$ 11.208,75</div>
+        </div>
+        <div class="card ok">
+          <div class="label">Notas emitidas</div>
+          <div class="valor">1.089</div>
+        </div>
+        <div class="card alerta">
+          <div class="label">Não emitidas</div>
+          <div class="valor">25</div>
+        </div>
+        <div class="card ok">
+          <div class="label">Valor emitido</div>
+          <div class="valor">R$ 11.116,73</div>
+        </div>
+      </div>
+
+      <div class="secao">
+        <h2>Progresso da emissão</h2>
+        <div class="barra"><div style="width:97.8%"></div></div>
+        <div class="linha"><span>Notas emitidas com sucesso</span><span><b>1.089</b> de 1.114 (97,8%)</span></div>
+        <div class="linha"><span>Valor emitido</span><span><b>R$ 11.116,73</b> de R$ 11.208,75</span></div>
+        <div class="linha"><span>Não emitidas (sem CPF/CNPJ cadastrado)</span><span><b>25</b> vendedores &middot; R$ 92,02</span></div>
+      </div>
+
+      <div class="secao">
+        <h2>Documentos e envio</h2>
+        <div class="linha"><span>PDFs gerados (DANFSe oficial)</span><span class="tag verde">1.089 / 1.089</span></div>
+        <div class="linha"><span>XMLs gerados (nota oficial)</span><span class="tag verde">1.089 / 1.089</span></div>
+        <div class="linha"><span>E-mails enviados aos vendedores</span><span class="tag verde">1.089 / 1.089</span></div>
+      </div>
+
+      <div class="secao">
+        <h2>Vendedores sem nota emitida (25)</h2>
+        <p class="obs">Motivo: sem CPF/CNPJ brasileiro cadastrado na Shopee (a maioria contas de vendedores estrangeiros / fornecedores da China ou o próprio "Shopee Choice"). Sem esse dado não é possível emitir NFS-e.</p>
+        <table>
+          <tr><th>Loja</th><th>Valor (R$)</th></tr>
+          <tr><td>Music Accessories Store</td><td>47,16</td></tr>
+          <tr><td>Choice Oficial</td><td>19,66</td></tr>
+          <tr><td>koksara.kbeauty</td><td>0,84</td></tr>
+          <tr><td>Health Life Management store</td><td>7,33</td></tr>
+          <tr><td>Maquiagem original</td><td>6,45</td></tr>
+          <tr><td>+ 20 outras lojas (valores menores)</td><td>10,58</td></tr>
+        </table>
+      </div>
+
+      <footer>Painel gerado por Jéssica Pereira - Contadora &middot; atualizado em 07/08/2026</footer>
+    </div>
+  </div>
+
+<script>
+  // Verificação simples de senha no navegador (não é um sistema de login real,
+  // é só uma barreira leve pra evitar acesso casual ao link).
+  const HASH_ESPERADO = "099cae268c2034b98d9d3464203135db542cd5fab7c37f2d917abf34bb0b5632";
+
+  async function sha256(texto) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(texto));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function entrar() {
+    const senha = document.getElementById("senha").value;
+    const hash = await sha256(senha);
+    if (hash === HASH_ESPERADO) {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("painel").style.display = "block";
+    } else {
+      document.getElementById("erro").textContent = "Senha incorreta.";
+    }
+  }
+  document.getElementById("senha").addEventListener("keydown", function(e){
+    if (e.key === "Enter") entrar();
+  });
+</script>
+</body>
+</html>
